@@ -1,0 +1,13 @@
+{
+    "no_identifier": "identifier konnte nicht gefunden werden",
+    "progress_take_item": "Nehme %s ...",
+    "progress_take_ems_bag": "Nehme ${inventory_label} auf ...",
+    "inventory_label": "SARF-BAG",
+    "open_inventory": "Öffne ${inventory_label}",
+    "menu_take_item_description": "Nehme %s",
+    "your_cant_open_dead": "Du kannst die Tasche nicht öffnen, wenn du tot bist!",
+    "your_cant_open_swimming": "Du kannst die Tasche nicht öffnen, während du schwimmst!",
+    "your_cant_open_in_vehicle": "Du kannst die Tasche nicht öffnen, wenn du in einem Fahrzeug sitzt!",
+    "took_bag_in_inventory": "Du hast eine Tasche aufgenommen",
+    "take_bag_back": "${inventory_label} aufnehmen"
+}

@@ -1,0 +1,13 @@
+{
+    "no_identifier": "can't find a identifier",
+    "progress_take_item": "Taking %s ...",
+    "progress_take_ems_bag": "Take ${inventory_label} ...",
+    "inventory_label": "SARF-BAG",
+    "open_inventory": "Open ${inventory_label}",
+    "menu_take_item_description": "Take %s",
+    "your_cant_open_dead": "you are dead! you can't open it",
+    "your_cant_open_swimming": "you are in water! you can't open it",
+    "your_cant_open_in_vehicle": "you are in a vehicle! you can't open it",
+    "took_bag_in_inventory": "You took back a ems bag back into your inventory",
+    "take_bag_back": "Take back ${inventory_label}"
+}

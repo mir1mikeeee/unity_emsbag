@@ -1,11 +1,10 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'hitachi_90'
-description 'ESX EMS-Bag for the Medicjob'
-version '1.0.2'
+author 'hitachi_90 - rewrite by mir_mikeeee'
+description 'ESX EMS-Bag for ox_inventory and osp_ambulance'
+version '2.0'
 lua54 'yes'
-this_is_a_map 'yes'
 
 shared_scripts {
     '@ox_lib/init.lua',
@@ -26,7 +25,9 @@ escrow_ignore {
 }
 
 files {
-    'stream/prop_cs_shopping_bag.ydr'
+    'locales/*.json',
+    'stream/**/*.ytyp',
+    'stream/**/*.ydr'
 }
 
-
+data_file 'DLC_ITYP_REQUEST' 'stream/**/*.ytyp'
