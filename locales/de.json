@@ -9,5 +9,6 @@
     "your_cant_open_swimming": "Du kannst die Tasche nicht öffnen, während du schwimmst!",
     "your_cant_open_in_vehicle": "Du kannst die Tasche nicht öffnen, wenn du in einem Fahrzeug sitzt!",
     "took_bag_in_inventory": "Du hast eine Tasche aufgenommen",
-    "take_bag_back": "${inventory_label} aufnehmen"
+    "take_bag_back": "${inventory_label} aufnehmen",
+    "no_bag_nearby": "Keine Tasche in der Nähe!"
 }

@@ -9,8 +9,8 @@ Config.allowedJobs = {
 }
 
 Config.Stash = {
-	MaxWeighStash = 1000,
-	MaxSlotsStash = 25,
+	maxweight = 80000,
+	slots = 25,
 }
 
 -- !!!! "Open Bag Inventory" button already in the menu! still add here items what you want add to inventory if player click on it 

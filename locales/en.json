@@ -9,5 +9,6 @@
     "your_cant_open_swimming": "you are in water! you can't open it",
     "your_cant_open_in_vehicle": "you are in a vehicle! you can't open it",
     "took_bag_in_inventory": "You took back a ems bag back into your inventory",
-    "take_bag_back": "Take back ${inventory_label}"
+    "take_bag_back": "Take back ${inventory_label}",
+    "no_bag_nearby": "No bag nearby!"
 }

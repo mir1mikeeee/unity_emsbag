@@ -8,7 +8,7 @@ end)
 RegisterNetEvent('unity_emsbag:server:CreateStash', function(stashId)
     local player = ESX.GetPlayerFromId(source)
     if player then
-        exports.ox_inventory:RegisterStash(stashId, locale("inventory_label"), Config.Stash.MaxSlotsStash, Config.Stash.MaxWeighStash)
+        exports.ox_inventory:RegisterStash(stashId, locale("inventory_label"), Config.Stash.slots, Config.Stash.maxweight)
     end
 end)
 

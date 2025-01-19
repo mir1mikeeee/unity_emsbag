@@ -1,16 +1,14 @@
 ESX = exports["es_extended"]:getSharedObject()
 lib.locale()
-RegisterNetEvent('unity_emsbag:client:SpawnAmbulanceBag', createBagObject)
-RegisterNetEvent('unity_emsbag:client:notify', Notify)
 
 RegisterNetEvent('unity_emsbag:client:action')
-AddEventHandler("unity_emsbag:client:action", function(action, ...)
+AddEventHandler("unity_emsbag:client:action", function(action, item)
     local playerPed = PlayerPedId()
     local playerPos = GetEntityCoords(playerPed)
     if action == 'takeItem' then
-        progressBar(locale('progress_take_item', getItemLabel(item)), 2500,function()
+        progressBar(locale('progress_take_item', getItemLabel(item)), 2500, function()
             TriggerServerEvent("unity_emsbag:server:AddItem", item)
-        )
+        end)
     elseif action == 'openStash' then
         local playerData = ESX.GetPlayerData()
         local identifier = playerData and playerData.identifier
@@ -18,21 +16,25 @@ AddEventHandler("unity_emsbag:client:action", function(action, ...)
         if not identifier then
             return Notify(locale('no_identifier'), 'error', 5000)
         end
-        TriggerServerEvent('unity_emsbag:server:CreateStash', stashId)
-        exports.ox_inventory:openInventory('stash', {
-            id = stashId,
-            owner = identifier,
-            label = locale("inventory_label"),
-            slots = Config.Stash.MaxSlotsStash
-        })
+        if GetResourceState('ox_inventory') == 'started' then
+            TriggerServerEvent('unity_emsbag:server:CreateStash', stashId)
+            exports.ox_inventory:openInventory('stash', {
+                id = stashId,
+                owner = identifier,
+                label = locale("inventory_label"),
+                slots = Config.Stash.slots,
+                weight = Config.Stash.maxweight
+            })
+        elseif GetResourceState('qs-inventory') == 'started' then
+            TriggerServerEvent('inventory:server:OpenInventory', 'stash', stashId, Config.Stash)
+            TriggerEvent("inventory:client:SetCurrentStash", stashId)
+        end
     elseif action == 'removeBag' then
-        local AmbulanceBag = getNearbyBag()
-
-        if DoesEntityExist(AmbulanceBag) then
+        if DoesEntityExist(item) then
             TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_MEDIC_TEND_TO_DEAD", 0, true)
             progressBar(locale("progress_take_ems_bag"), 2500, function()
-                SetEntityAsMissionEntity(AmbulanceBag, 1, 1)
-                DeleteObject(AmbulanceBag)
+                SetEntityAsMissionEntity(item, 1, 1)
+                DeleteObject(item)
                 TriggerServerEvent("unity_emsbag:server:AddItem", "emsbag")
                 Notify(locale("took_bag_in_inventory"))
             end)
@@ -54,7 +56,7 @@ AddEventHandler("unity_emsbag:client:action", function(action, ...)
 end)
 
 CreateThread(function()
-    while ESX.IsPlayerLoaded() do
+    while not ESX.IsPlayerLoaded() do
         Wait(100)
     end
     if GetResourceState('ox_target') == 'missing' then
@@ -63,13 +65,12 @@ CreateThread(function()
     exports.ox_target:addModel(Config.AmbulanceBag, {
         {
             name    = "unity_emsbag:MenuAmbulanceBag",
-            event   = "unity_emsbag:client:MenuAmbulanceBag",
             icon    = "fa-solid fa-suitcase-medical",
             label   = locale("open_inventory"), 
             groups = Config.allowedJobs,
             distance = 2.0,
             onSelect = function(data)
-                TriggerEvent('unity_emsbag:client:action', 'openBag')
+                TriggerEvent('unity_emsbag:client:action', 'openMenu')
             end
         },
         {
@@ -79,7 +80,7 @@ CreateThread(function()
             groups = Config.allowedJobs,
             distance = 2.0,
             onSelect = function(data)
-                TriggerEvent('unity_emsbag:client:action', 'removeBag')
+                TriggerEvent('unity_emsbag:client:action', 'removeBag', data.entity)
             end
         },
     })
@@ -101,7 +102,7 @@ CreateThread(function()
             title = getItemLabel(button.item),
             description = button.description or locale("menu_take_item_description", getItemLabel(button.item)),
             onSelect = function()
-                TriggerEvent('unity_emsbag:client:action', 'takeItem', item = button.item)
+                TriggerEvent('unity_emsbag:client:action', 'takeItem', button.item)
             end,
             icon = button.icon,
             iconColor = button.iconColor

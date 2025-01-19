@@ -8,7 +8,7 @@ function dropemsbag()
 end
 
 function createBagObject()
-    if emsbagObject then return end
+    if emsbagObject ~= nil then return end
     local hash = GetHashKey(Config.AmbulanceBag)
     local ped = PlayerPedId()
     local x, y, z = table.unpack(GetOffsetFromEntityInWorldCoords(ped, 0.0, 3.0, 0.5))
@@ -35,16 +35,12 @@ function createBagObject()
         end
     end)
 end
-
-function getNearbyBag()
-    local convertedBaglist = {}
-    convertedBaglist[Config.AmbulanceBag] = true
-    return ESX.Game.GetClosestObject(GetEntityCoords(PlayerPedId()), convertedBaglist)
-end
+RegisterNetEvent('unity_emsbag:client:SpawnAmbulanceBag', createBagObject)
 
 function Notify(msg, type, time)
     ESX.ShowNotification(msg, type or 'info', time or 5000)
 end
+RegisterNetEvent('unity_emsbag:client:notify', Notify)
 
 function progressBar(msg, time, cb)
     ESX.Progressbar(msg, time or 2500, {
@@ -73,6 +69,16 @@ function missingTarget()
 end
 
 function getItemLabel(item)
-    local data = exports.ox_inventory:Items(item)
-    return data.label
+    local data = "UNKNOWN"
+    if GetResourceState('ox_inventory') == 'started' then
+        data = exports.ox_inventory:Items(item).label
+    elseif GetResourceState('qs-inventory') == 'started' then
+        for k, items in pairs(exports['qs-inventory']:GetItemList()) do
+            if items.name == item then
+                data = items.label
+                break
+            end
+        end
+    end
+    return data
 end
