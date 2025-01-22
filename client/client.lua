@@ -31,7 +31,6 @@ AddEventHandler("unity_emsbag:client:action", function(action, item)
         end
     elseif action == 'removeBag' then
         if DoesEntityExist(item) then
-            TaskStartScenarioInPlace(playerPed, "CODE_HUMAN_MEDIC_TEND_TO_DEAD", 0, true)
             progressBar(locale("progress_take_ems_bag"), 2500, function()
                 SetEntityAsMissionEntity(item, 1, 1)
                 DeleteObject(item)

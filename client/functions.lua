@@ -69,9 +69,11 @@ function missingTarget()
 end
 
 function getItemLabel(item)
-    local data = "UNKNOWN"
+    local data = "UNKNOWN LABEL (" .. item .. ")"
     if GetResourceState('ox_inventory') == 'started' then
-        data = exports.ox_inventory:Items(item).label
+        if exports.ox_inventory:Items(item) and exports.ox_inventory:Items(item).label then
+            data = exports.ox_inventory:Items(item).label
+        end
     elseif GetResourceState('qs-inventory') == 'started' then
         for k, items in pairs(exports['qs-inventory']:GetItemList()) do
             if items.name == item then
