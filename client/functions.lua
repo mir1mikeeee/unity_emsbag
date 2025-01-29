@@ -43,13 +43,32 @@ end
 RegisterNetEvent('unity_emsbag:client:notify', Notify)
 
 function progressBar(msg, time, cb)
-    ESX.Progressbar(msg, time or 2500, {
-        animation = {
-            type = "Scenario",
-            Scenario = Config.AnimationScenario
-        },
-        onFinish = cb
-    })
+    if Config.progressBarType == 'ox' then
+        if lib.progressCircle({
+            label = msg,
+            duration = time or 2500,
+            position = 'bottom',
+            useWhileDead = false,
+            canCancel = false,
+            disable = {
+                car = true,
+            },
+            anim = {
+                scenario = Config.AnimationScenario
+            },
+        }) then 
+            cb()
+        else 
+        end
+    else
+        ESX.Progressbar(msg, time or 2500, {
+            animation = {
+                type = "Scenario",
+                Scenario = Config.AnimationScenario
+            },
+            onFinish = cb
+        })
+    end
 end
 
 function runAnimantion(time)

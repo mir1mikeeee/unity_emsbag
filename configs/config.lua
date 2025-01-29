@@ -13,6 +13,8 @@ Config.Stash = {
 	slots = 25,
 }
 
+Config.progressBarType = 'default' -- set this to 'ox' if you want to use the ox progress ciclye instead of esx progressbar
+
 -- !!!! "Open Bag Inventory" button already in the menu! still add here items what you want add to inventory if player click on it 
 Config.MenuItems = {
 	{
