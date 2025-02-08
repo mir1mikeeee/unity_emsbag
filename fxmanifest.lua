@@ -2,20 +2,21 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'hitachi_90 - rewrite by mir_mikeeee'
-description 'ESX EMS-Bag for ox_inventory/qs-inventory and osp_ambulance'
-version '2.0.3'
+description 'EMS-Bag for ox_inventory/qs-inventory/qb-inventory and osp_ambulance'
+version '3.0.0'
 lua54 'yes'
 
 shared_scripts {
     '@ox_lib/init.lua',
+    'shared.lua',
     "configs/*.lua"
 }
 
-server_script {
+server_scripts {
     "server/*.lua"
 }
 
-client_script {
+client_scripts {
     "client/*.lua"
 }
 

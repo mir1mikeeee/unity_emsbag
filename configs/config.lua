@@ -4,8 +4,16 @@ Config.AmbulanceBag = "ems_bag_object"
 
 Config.AnimationScenario = "CODE_HUMAN_MEDIC_TEND_TO_DEAD"
 
+Config.useTarget = true -- if you don't use qb or ox target then set this to false
+
+-- !!! Just edit the keys if you don't use a target system and use other keys https://docs.fivem.net/docs/game-references/controls/
+Config.OpenMenuKey = 38 -- E
+Config.OpenMenuKeyString = 'INPUT_PICKUP'
+Config.TakeKey = 23 -- F
+Config.TakeKeyString = 'INPUT_ENTER'
+
 Config.allowedJobs = {
-	"ambulance",
+    ["ambulance"] = 0
 }
 
 Config.Stash = {

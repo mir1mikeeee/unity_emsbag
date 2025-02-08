@@ -1,3 +1,7 @@
+while FRAMEWORK == nil do
+    Wait(100)
+end
+
 local emsbagObject = nil
 local hasBag = false
 
@@ -38,7 +42,7 @@ end
 RegisterNetEvent('unity_emsbag:client:SpawnAmbulanceBag', createBagObject)
 
 function Notify(msg, type, time)
-    ESX.ShowNotification(msg, type or 'info', time or 5000)
+    FRAMEWORK.ShowNotification(msg, type or 'info', time or 5000)
 end
 RegisterNetEvent('unity_emsbag:client:notify', Notify)
 
@@ -61,13 +65,7 @@ function progressBar(msg, time, cb)
         else 
         end
     else
-        ESX.Progressbar(msg, time or 2500, {
-            animation = {
-                type = "Scenario",
-                Scenario = Config.AnimationScenario
-            },
-            onFinish = cb
-        })
+        FRAMEWORK.Progressbar(msg, time or 2500, cb)
     end
 end
 
@@ -100,6 +98,66 @@ function getItemLabel(item)
                 break
             end
         end
+    elseif GetResourceState('qb-inventory') == 'started' then
+        local sharedobj = exports["qb-core"]:GetCoreObject()
+        for key, value in pairs (sharedobj.Shared.Items) do
+            if value.name == item then
+                data = value.label
+                break
+            end
+        end
     end
     return data
+end
+
+function runNonTargetTask()
+
+    CreateThread(function()
+        while true do
+            local sleep = 2000
+            local coords = GetEntityCoords(PlayerPedId())
+            local object, distance = GetClosestObject(coords, {Config.AmbulanceBag})
+            if object and not hasBag then
+                if distance < 2.0 then
+                    sleep = 0
+                    ShowHelpNotification(locale("no_target_help_notify", '~' .. Config.OpenMenuKeyString .. '~', '~' .. Config.TakeKeyString .. '~'))
+                    if IsControlJustPressed(0, Config.OpenMenuKey) then
+                        TriggerEvent('unity_emsbag:client:action', 'openMenu')
+                    end
+
+                    if IsControlJustPressed(0, Config.TakeKey) then
+                        TriggerEvent('unity_emsbag:client:action', 'removeBag', object)
+                    end
+                end
+            end
+            Wait(sleep)
+        end
+    end)
+
+end
+
+function ShowHelpNotification(text)
+    BeginTextCommandDisplayHelp("STRING")
+    AddTextComponentSubstringPlayerName(text)
+    EndTextCommandDisplayHelp(0, false, true, -1)
+end
+
+function GetClosestObject(coords, objectList)
+    local closestObject = nil
+    local closestDistance = nil
+
+    for _, objectName in pairs(objectList) do
+        local object = GetClosestObjectOfType(coords.x, coords.y, coords.z, 50.0, GetHashKey(objectName), false, false, false)
+        if DoesEntityExist(object) then
+            local objCoords = GetEntityCoords(object)
+            local distance = #(coords - objCoords)
+
+            if closestDistance == nil then
+                closestObject = object
+                closestDistance = distance
+            end
+        end
+    end
+
+    return closestObject, closestDistance
 end

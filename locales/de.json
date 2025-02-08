@@ -10,5 +10,6 @@
     "your_cant_open_in_vehicle": "Du kannst die Tasche nicht öffnen, wenn du in einem Fahrzeug sitzt!",
     "took_bag_in_inventory": "Du hast eine Tasche aufgenommen",
     "take_bag_back": "${inventory_label} aufnehmen",
-    "no_bag_nearby": "Keine Tasche in der Nähe!"
+    "no_bag_nearby": "Keine Tasche in der Nähe!",
+    "no_target_help_notify": "%s um das ${inventory_label} Menü zu öffnen\n%s um wieder einzupacken"
 }

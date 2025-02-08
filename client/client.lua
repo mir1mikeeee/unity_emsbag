@@ -1,5 +1,6 @@
-ESX = exports["es_extended"]:getSharedObject()
-lib.locale()
+while FRAMEWORK == nil do
+    Wait(100)
+end
 
 RegisterNetEvent('unity_emsbag:client:action')
 AddEventHandler("unity_emsbag:client:action", function(action, item)
@@ -10,8 +11,8 @@ AddEventHandler("unity_emsbag:client:action", function(action, item)
             TriggerServerEvent("unity_emsbag:server:AddItem", item)
         end)
     elseif action == 'openStash' then
-        local playerData = ESX.GetPlayerData()
-        local identifier = playerData and playerData.identifier
+        local playerData = FRAMEWORK.GetPlayerData()
+        local identifier = playerData and (playerData.identifier and playerData.identifier or playerData.citizenid)
         local stashId = "ambulance_bag_" .. identifier
         if not identifier then
             return Notify(locale('no_identifier'), 'error', 5000)
@@ -28,6 +29,8 @@ AddEventHandler("unity_emsbag:client:action", function(action, item)
         elseif GetResourceState('qs-inventory') == 'started' then
             TriggerServerEvent('inventory:server:OpenInventory', 'stash', stashId, Config.Stash)
             TriggerEvent("inventory:client:SetCurrentStash", stashId)
+        elseif GetResourceState('qb-inventory') == 'started' then
+            TriggerServerEvent('unity_emsbag:server:openQBInv', stashId)
         end
     elseif action == 'removeBag' then
         if DoesEntityExist(item) then
@@ -55,34 +58,65 @@ AddEventHandler("unity_emsbag:client:action", function(action, item)
 end)
 
 CreateThread(function()
-    while not ESX.IsPlayerLoaded() do
-        Wait(100)
+
+    if Config.useTarget then
+        if GetResourceState('ox_target') == 'missing' and GetResourceState('qb-target') == 'missing' then
+            return missingTarget()
+        end
+
+        if GetResourceState('ox_target') == 'started' then
+            exports.ox_target:addModel(Config.AmbulanceBag, {
+                {
+                    name    = "unity_emsbag:MenuAmbulanceBag",
+                    icon    = "fa-solid fa-suitcase-medical",
+                    label   = locale("open_inventory"), 
+                    groups = Config.allowedJobs,
+                    job = Config.allowedJobs,
+                    distance = 2.0,
+                    onSelect = function(data)
+                        TriggerEvent('unity_emsbag:client:action', 'openMenu')
+                    end
+                },
+                {
+                    name    = "unity_emsbag:removeBag",
+                    icon    = "fa-solid fa-suitcase-medical",
+                    label   = locale("take_bag_back"),
+                    groups = Config.allowedJobs,
+                    job = Config.allowedJobs,
+                    distance = 2.0,
+                    onSelect = function(data)
+                        TriggerEvent('unity_emsbag:client:action', 'removeBag', data.entity)
+                    end
+                },
+            })
+        elseif GetResourceState('qb-target') == 'started' then
+            exports["qb-target"]:AddTargetModel(Config.AmbulanceBag, {
+                options = {
+                    {
+                        name    = "unity_emsbag:MenuAmbulanceBag",
+                        icon    = "fa-solid fa-suitcase-medical",
+                        label   = locale("open_inventory"), 
+                        job = Config.allowedJobs,
+                        action = function(data)
+                            TriggerEvent('unity_emsbag:client:action', 'openMenu')
+                        end
+                    },
+                    {
+                        name    = "unity_emsbag:removeBag",
+                        icon    = "fa-solid fa-suitcase-medical",
+                        label   = locale("take_bag_back"),
+                        job = Config.allowedJobs,
+                        action = function(entity)
+                            TriggerEvent('unity_emsbag:client:action', 'removeBag', entity)
+                        end
+                    },
+                },
+                distance = 2.0
+            })
+        end
+    else
+        runNonTargetTask()
     end
-    if GetResourceState('ox_target') == 'missing' then
-        return missingTarget()
-    end
-    exports.ox_target:addModel(Config.AmbulanceBag, {
-        {
-            name    = "unity_emsbag:MenuAmbulanceBag",
-            icon    = "fa-solid fa-suitcase-medical",
-            label   = locale("open_inventory"), 
-            groups = Config.allowedJobs,
-            distance = 2.0,
-            onSelect = function(data)
-                TriggerEvent('unity_emsbag:client:action', 'openMenu')
-            end
-        },
-        {
-            name    = "unity_emsbag:removeBag",
-            icon    = "fa-solid fa-suitcase-medical",
-            label   = locale("take_bag_back"), 
-            groups = Config.allowedJobs,
-            distance = 2.0,
-            onSelect = function(data)
-                TriggerEvent('unity_emsbag:client:action', 'removeBag', data.entity)
-            end
-        },
-    })
 
     local menuList = {
         {

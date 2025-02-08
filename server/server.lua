@@ -1,27 +1,35 @@
-ESX = exports["es_extended"]:getSharedObject()
-lib.locale()
+while FRAMEWORK == nil do
+    Wait(100)
+end
 
-ESX.RegisterUsableItem('emsbag', function(source)
+FRAMEWORK.RegisterUsableItem('emsbag', function(source)
     TriggerClientEvent("unity_emsbag:client:SpawnAmbulanceBag", source)
 end)
 
 RegisterNetEvent('unity_emsbag:server:CreateStash', function(stashId)
-    local player = ESX.GetPlayerFromId(source)
+    local player = FRAMEWORK.GetPlayerFromId(source)
     if player then
         exports.ox_inventory:RegisterStash(stashId, locale("inventory_label"), Config.Stash.slots, Config.Stash.maxweight)
     end
 end)
 
-RegisterNetEvent('unity_emsbag:server:RemoveBagItem', function()
-    local player = ESX.GetPlayerFromId(source)
+RegisterNetEvent('unity_emsbag:server:openQBInv', function(stashId)
+    local player = FRAMEWORK.GetPlayerFromId(source)
     if player then
-        player.removeInventoryItem('emsbag', 1)
+        exports['qb-inventory']:OpenInventory(source, stashId, Config.Stash)
+    end
+end)
+
+RegisterNetEvent('unity_emsbag:server:RemoveBagItem', function()
+    local player = FRAMEWORK.GetPlayerFromId(source)
+    if player then
+        FRAMEWORK.RemoveItem(player, 'emsbag', 1)
     end
 end)
 
 RegisterNetEvent('unity_emsbag:server:AddItem', function(item)
     local src = source
-    local player = ESX.GetPlayerFromId(src)
+    local player = FRAMEWORK.GetPlayerFromId(src)
     local amount = 1
     for _, button in pairs(Config.MenuItems) do
         if button.item == item then
@@ -29,6 +37,6 @@ RegisterNetEvent('unity_emsbag:server:AddItem', function(item)
         end
     end
     if player then
-        player.addInventoryItem(item, amount)
+        FRAMEWORK.AddItem(player, item, amount)
     end
 end)
