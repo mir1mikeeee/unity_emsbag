@@ -73,6 +73,10 @@ else
                     return function(text, type, lenght)
                         QBCore.Functions.Notify(text, 'primary', length or 5000)
                     end
+                elseif key == "GetAuthJob" then
+                    return function()
+                        return Config.allowedJobs[QBCore.Functions.GetPlayerData().job.name] >= 0 or false
+                    end
                 elseif key == "Progressbar" then
                     return function(msg, time, cb)
                         QBCore.Functions.Progressbar('EMSBAG', msg, time or 2500, false, false, {
@@ -107,6 +111,10 @@ else
                 elseif key == "ShowNotification" then
                     return function(text, type, lenght)
                         ESX.ShowNotification(text, type or 'info', lenght or 5000)
+                    end
+                elseif key == "GetAuthJob" then
+                    return function()
+                        return Config.allowedJobs[ESX.GetPlayerData().job.name] >= 0 or false
                     end
                 elseif key == "Progressbar" then
                     return function(msg, time, cb)

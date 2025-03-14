@@ -117,7 +117,8 @@ function runNonTargetTask()
             local sleep = 2000
             local coords = GetEntityCoords(PlayerPedId())
             local object, distance = GetClosestObject(coords, {Config.AmbulanceBag})
-            if object and not hasBag then
+            local validJob = FRAMEWORK.GetAuthJob()
+            if object and not hasBag and validJob then
                 if distance < 2.0 then
                     sleep = 0
                     ShowHelpNotification(locale("no_target_help_notify", '~' .. Config.OpenMenuKeyString .. '~', '~' .. Config.TakeKeyString .. '~'))

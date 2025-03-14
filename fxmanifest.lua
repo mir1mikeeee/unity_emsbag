@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'hitachi_90 - rewrite by mir_mikeeee'
 description 'EMS-Bag for ox_inventory/qs-inventory/qb-inventory and osp_ambulance'
-version '3.0.0'
+version '3.0.1'
 lua54 'yes'
 
 shared_scripts {
