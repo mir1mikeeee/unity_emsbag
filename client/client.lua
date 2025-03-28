@@ -35,10 +35,22 @@ AddEventHandler("unity_emsbag:client:action", function(action, item)
     elseif action == 'removeBag' then
         if DoesEntityExist(item) then
             progressBar(locale("progress_take_ems_bag"), 2500, function()
-                SetEntityAsMissionEntity(item, 1, 1)
-                DeleteObject(item)
-                TriggerServerEvent("unity_emsbag:server:AddItem", "emsbag")
-                Notify(locale("took_bag_in_inventory"))
+                local timeout = 1000
+                local start = GetGameTimer()
+    
+                while not NetworkHasControlOfEntity(item) and (GetGameTimer() - start < timeout) do
+                    NetworkRequestControlOfEntity(item)
+                    Wait(0)
+                end
+    
+                if NetworkHasControlOfEntity(item) then
+                    SetEntityAsMissionEntity(item, true, true)
+                    DeleteEntity(item)
+                    TriggerServerEvent("unity_emsbag:server:AddItem", "emsbag")
+                    Notify(locale("took_bag_in_inventory"))
+                else
+                    Notify(locale("no_bag_nearby"))
+                end
             end)
         else
             Notify(locale("no_bag_nearby"))
